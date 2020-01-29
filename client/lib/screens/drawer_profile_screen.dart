@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Provider.of<Users>(context).fetchAndSetUsers().then((users) {
         setState(() {
           _isLoading = false;
-          _editedUser = users[1];
+          _editedUser = users[2];
         });
       });
     }
@@ -330,7 +330,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'Password',
+                        'Confirm Password',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: _width * 0.04,

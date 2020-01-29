@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/user.dart';
+import '../providers/users.dart';
 import '../widgets/custom_input_decoration.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -11,6 +13,9 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final _form = GlobalKey<FormState>();
+  var _isLoading = false;
+
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
   final _nameFocusNode = FocusNode();
@@ -29,12 +34,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
-  Future<void> _registerForm() async {}
+  var _newUser = User(
+    id: null,
+    name: '',
+    surname: '',
+    email: '',
+    phoneNo: null,
+    password: '',
+  );
+
+  Future<void> _registerForm() async {
+    _form.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+    await Provider.of<Users>(context, listen: false).addUser(_newUser);
+
+    print('User name: ' + _newUser.name);
+
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
+    print('asdasd');
+  }
 
   @override
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height;
-    final _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -56,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Padding(
         padding: EdgeInsets.only(top: _height * 0.05, left: 30, right: 30),
         child: Form(
-          //key: _form,
+          key: _form,
           child: ListView(
             children: <Widget>[
               TextFormField(
@@ -73,13 +100,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   FocusScope.of(context).requestFocus(_passwordFocusNode);
                 },
                 validator: (value) {
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'Invalid email!';
+                  if (value.isEmpty) {
+                    return 'Please enter mail';
+                  } else if (!value.contains('@') || !value.contains('.')) {
+                    return 'Please enter correct mail';
                   }
                 },
-                //onSaved: (value) {
-
-                // },
+                onSaved: (value) {
+                  setState(() {
+                    _newUser.email = value;
+                  });
+                },
               ),
               SizedBox(height: 20),
               TextFormField(
@@ -90,7 +121,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 controller: _passwordController,
                 style: TextStyle(
                   fontSize: 18.0,
-                  //color: Color.fromRGBO(121, 121, 121, 1),
                   letterSpacing: 0.92,
                 ),
                 decoration: buildSignUpInputDecoration('Password'),
@@ -100,40 +130,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       .requestFocus(_confirmPasswordFocusNode);
                 },
                 validator: (value) {
-                  if (value.isEmpty || value.length < 5) {
-                    return 'Password is too short!';
+                  if (value.isEmpty) {
+                    return 'Please enter password';
+                  } else if (value.length < 8) {
+                    return 'At least 8 characters';
                   }
                 },
-                //onSaved: (value) {
-
-                // },
+                onSaved: (value) {
+                  setState(() {
+                    _newUser.password = value;
+                  });
+                },
               ),
               SizedBox(height: 20),
               TextFormField(
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  maxLines: 1,
-                  obscureText: true,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    //color: Color.fromRGBO(121, 121, 121, 1),
-                    letterSpacing: 0.92,
-                  ),
-                  decoration: buildSignUpInputDecoration('Confirm Password'),
-                  focusNode: _confirmPasswordFocusNode,
-                  onFieldSubmitted: (_) {
-                    FocusScope.of(context).requestFocus(_nameFocusNode);
-                  },
-                  validator: (value) {
-                    if (value != _passwordController.text) {
-                      return 'Passwords do not match!';
-                    }
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                maxLines: 1,
+                obscureText: true,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  letterSpacing: 0.92,
+                ),
+                decoration: buildSignUpInputDecoration('Confirm Password'),
+                focusNode: _confirmPasswordFocusNode,
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(_nameFocusNode);
+                },
+                validator: (value) {
+                  if (value != _passwordController.text) {
+                    return 'Passwords mismatch';
                   }
-
-                  //onSaved: (value) {
-
-                  // },
-                  ),
+                },
+              ),
               SizedBox(height: 20),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -145,7 +174,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       maxLines: 1,
                       style: TextStyle(
                         fontSize: 18.0,
-                        //color: Color.fromRGBO(121, 121, 121, 1),
                         letterSpacing: 0.92,
                       ),
                       decoration: buildSignUpInputDecoration('Name'),
@@ -155,8 +183,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Invalid name!';
+                          return 'Please enter name';
                         }
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          _newUser.name = value;
+                        });
                       },
                     ),
                   ),
@@ -168,7 +201,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       maxLines: 1,
                       style: TextStyle(
                         fontSize: 18,
-                        //color: Color.fromRGBO(121, 121, 121, 1),
                         letterSpacing: 0.92,
                       ),
                       decoration: buildSignUpInputDecoration('Surname'),
@@ -178,8 +210,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Invalid surname!';
+                          return 'Please enter surname';
                         }
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          _newUser.surname = value;
+                        });
                       },
                     ),
                   ),
@@ -192,7 +229,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 maxLines: 1,
                 style: TextStyle(
                   fontSize: 18.0,
-                  //color: Color.fromRGBO(121, 121, 121, 1),
                   letterSpacing: 0.92,
                 ),
                 decoration: buildSignUpInputDecoration('Phone number'),
@@ -202,30 +238,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Invalid phone number!';
+                    return 'Please enter phone number';
                   }
                 },
-                //onSaved: (value) {
-
-                // },
+                onSaved: (value) {
+                  setState(() {
+                    _newUser.phoneNo = int.parse(value);
+                  });
+                },
               ),
               SizedBox(height: _height * 0.05),
               Container(
                 child: ButtonTheme(
                   height: _height * 0.07,
                   child: RaisedButton(
-                    color: Colors.orange,
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontSize: _height * 0.025,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 0.92,
+                      color: Colors.orange,
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: _height * 0.025,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 0.92,
+                        ),
                       ),
-                    ),
-                    onPressed: _registerForm,
-                  ),
+                      onPressed: () {
+                        if (_form.currentState.validate()) {
+                          _registerForm();
+                        }
+                      }),
                 ),
               ),
             ],
