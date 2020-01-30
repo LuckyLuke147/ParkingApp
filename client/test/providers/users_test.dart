@@ -29,8 +29,9 @@ main() {
 
     expect(notifyCalled, true);
     verify(client.put(argThat(equals('http://192.168.0.178:8080/users/123')),
+        headers: argThat(equals({"Content-type": "application/json"}), named: "headers"),
         body: argThat(equals(
-            "{\"name\":\"Peter\",\"surname\":\"Parker\",\"e_mail\":\"a.b@gmail.com\",\"phone_number\":5555555555,\"password\":\"test123\"}"),
+            "{\"id\":123,\"name\":\"Peter\",\"surname\":\"Parker\",\"e_mail\":\"a.b@gmail.com\",\"phone_number\":5555555555,\"password\":\"test123\"}"),
             named: "body")));
   });
 }

@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Provider.of<Users>(context).fetchAndSetUsers().then((users) {
         setState(() {
           _isLoading = false;
-          _editedUser = users[1];
+          _editedUser = users[0];
         });
       });
     }
@@ -47,6 +47,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _saveForm() async {
+    if(_isLoading) {
+      return;
+    }
     final isValid = _form.currentState.validate();
     if (!isValid) {
       return;
@@ -135,8 +138,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               letterSpacing: 0.92,
                               color: Colors.black,
                             ),
+                            initialValue: _editedUser.name,
                             decoration: InputDecoration(
-                              hintText: _editedUser.name,
+                              hintText: "first name",
                               hintStyle: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,
@@ -177,8 +181,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               letterSpacing: 0.92,
                               color: Colors.black,
                             ),
+                            initialValue: _editedUser.surname,
                             decoration: InputDecoration(
-                              hintText: _editedUser.surname,
+                              hintText: "last name",
                               hintStyle: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,
@@ -220,8 +225,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               letterSpacing: 0.92,
                               color: Colors.black,
                             ),
+                            initialValue: _editedUser.phoneNo.toString(),
                             decoration: InputDecoration(
-                              hintText: _editedUser.phoneNo.toString(),
+                              hintText: "phone no",
                               hintStyle: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,
@@ -262,8 +268,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               letterSpacing: 0.92,
                               color: Colors.black,
                             ),
+                            initialValue: _editedUser.email,
                             decoration: InputDecoration(
-                              hintText: _editedUser.email,
+                              hintText: "email",
                               hintStyle: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,
@@ -305,8 +312,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               letterSpacing: 0.92,
                               color: Colors.black,
                             ),
+                            initialValue: _editedUser.password,
                             decoration: InputDecoration(
-                              hintText: _editedUser.password,
+                              hintText: "password",
                               hintStyle: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,
@@ -348,8 +356,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               letterSpacing: 0.92,
                               color: Colors.black,
                             ),
+                            initialValue: _editedUser.password,
                             decoration: InputDecoration(
-                              hintText: _editedUser.password,
+                              hintText: "confirm password",
                               hintStyle: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,
