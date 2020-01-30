@@ -17,8 +17,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var _isInit = true;
   var _isLoading = false;
 
-
-
   var _editedUser = User(
     id: null,
     name: '',
@@ -38,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Provider.of<Users>(context).fetchAndSetUsers().then((users) {
         setState(() {
           _isLoading = false;
-          _editedUser = users[2];
+          _editedUser = users[0];
         });
       });
     }

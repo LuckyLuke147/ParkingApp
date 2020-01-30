@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import './overview_user_screen.dart';
 import '../providers/user.dart';
 import '../providers/users.dart';
 import '../widgets/custom_input_decoration.dart';
@@ -55,8 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       _isLoading = false;
     });
-    Navigator.of(context).pop();
-    print('asdasd');
+    Navigator.of(context).pushNamed(UserOverviewScreen.routeName);
   }
 
   @override
