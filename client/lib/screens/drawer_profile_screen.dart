@@ -17,8 +17,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var _isInit = true;
   var _isLoading = false;
 
-
-
   var _editedUser = User(
     id: null,
     name: '',
@@ -338,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'Password',
+                        'Confirm Password',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: _width * 0.04,

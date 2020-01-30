@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/users.dart';
 
 import './drawer_admin_members_details_screen.dart';
 
@@ -27,22 +30,23 @@ class Debouncer {
 }
 
 class _MembersScreenState extends State<MembersScreen> {
-  final List<String> items =
-      new List<String>.generate(50, (i) => 'Items ${i + 1}');
+  final List<String> values = [];
+  List<String> filteredUsers = List();
 
   final _debouncer = Debouncer(milliseconds: 500);
-  List<String> filteredUsers = List();
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      filteredUsers = items;
+      filteredUsers = values;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final users = Provider.of<Users>(context);
+
     final _width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color.fromRGBO(244, 244, 244, 1),
@@ -81,7 +85,7 @@ class _MembersScreenState extends State<MembersScreen> {
             onChanged: (string) {
               _debouncer.run(() {
                 setState(() {
-                  filteredUsers = items
+                  filteredUsers = values
                       .where((u) =>
                           (u.toLowerCase().contains(string.toLowerCase())))
                       .toList();
@@ -92,12 +96,13 @@ class _MembersScreenState extends State<MembersScreen> {
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              itemCount: filteredUsers.length,
+              itemCount: users.items.length,
               itemBuilder: (ctx, index) {
                 return GestureDetector(
                   onTap: () => {
                     Navigator.of(context)
                         .pushNamed(MemberDetailsScreen.routeName),
+                    FocusScope.of(context).requestFocus(new FocusNode()),
                   },
                   child: Card(
                     child: Padding(
@@ -107,7 +112,10 @@ class _MembersScreenState extends State<MembersScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text('Imię' + ' ' + 'Nazwisko',
+                          Text(
+                              users.items[index].name +
+                                  ' ' +
+                                  users.items[index].surname,
                               style: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,

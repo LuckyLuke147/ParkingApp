@@ -34,39 +34,29 @@ class Users with ChangeNotifier {
     }
   }
 
-  // Future<void> addUser(User user) async {
-  //   final url = 'http://192.168.0.178:8080/users';
+  Future<void> addUser(User user) async {
+    final url = 'http://192.168.0.178:8080/users';
 
-  //   try {
-  //     final response = await http.post(
-  //       url,
-  //       body: json.encode({
-  //         'name': user.name,
-  //         'surname': user.surname,
-  //         'e_mail': user.email,
-  //         'phone_number': user.phoneNo,
-  //         'password': user.password,
-  //       }),
-  //     );
-  //     final newUser = User(
-  //       id: json.decode(response.body)['id'],
-  //       name: user.name,
-  //       surname: user.surname,
-  //       email: user.email,
-  //       phoneNo: user.phoneNo,
-  //       password: user.password,
-  //     );
-  //     _items.add(newUser);
-  //     notifyListeners();
-  //   } catch (error) {
-  //     print(error);
-  //     throw error;
-  //   }
-  // }
+    try {
+      final response = await http.post(url,
+          headers: {"Content-type": "application/json"},
+          body: json.encode(user.toJson()));
 
-
-
-
+      final newUser = User(
+        id: json.decode(response.body)['id'],
+        name: user.name,
+        surname: user.surname,
+        email: user.email,
+        phoneNo: user.phoneNo,
+        password: user.password,
+      );
+      _items.add(newUser);
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
 
   Future<void> updateUser(int id, User newUser) async {
     var client = new http.Client();
@@ -79,7 +69,7 @@ class Users with ChangeNotifier {
       final url = 'http://192.168.0.178:8080/users/$id';
       await client.put(url,
           headers: {"Content-type": "application/json"},
-          body: jsonEncode(newUser.toJson()));
+          body: json.encode(newUser.toJson()));
       updateIfStored(newUser);
       notifyListeners();
     } else {
