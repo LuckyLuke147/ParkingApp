@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/users.dart';
+import '../providers/vehicle.dart';
 import '../widgets/vehicle_cart.dart';
 import '../widgets/new_vehicle_dialog.dart';
 
-class VehiclesScreen extends StatelessWidget {
+class VehiclesScreen extends StatefulWidget {
   static const routeName = '/vehicles';
 
+  @override
+  _VehiclesScreenState createState() => _VehiclesScreenState();
+}
+
+class _VehiclesScreenState extends State<VehiclesScreen> {
   TextEditingController brandController = TextEditingController();
 
-  final List<String> items =
-      new List<String>.generate(5, (i) => 'Items ${i + 1}');
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    Provider.of<Users>(context).findById(1);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<Vehicle> vehicles = Provider.of<Users>(context).currentUser.vehicles;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromRGBO(244, 244, 244, 1),
@@ -64,7 +81,7 @@ class VehiclesScreen extends StatelessWidget {
                         elevation: 5.0,
                         onPressed: () {
                           Navigator.of(context).pop();
-                          items.add(brandController.text);
+                          //vehicles.add(brandController.text);
                         },
                         child: Container(
                           padding:
@@ -100,9 +117,9 @@ class VehiclesScreen extends StatelessWidget {
       body: ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         primary: false,
-        itemCount: items.length,
+        itemCount: vehicles.length,
         itemBuilder: (ctx, i) =>
-            VehicleCart(items[i], 'Honda', 'Accord', 'KR12343'),
+            VehicleCart(vehicles[i].id.toString(), vehicles[i].brand, vehicles[i].model, vehicles[i].registration_no),
       ),
     );
   }

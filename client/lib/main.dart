@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
           AdminReservationScreen.routeName: (ctx) => AdminReservationScreen(),
           ReservationsHistoryScreen.routeName: (ctx) =>
               ReservationsHistoryScreen(),
-          AdminVahiclesScreen.routeName: (ctx) => AdminVahiclesScreen(),
+          AdminVehiclesScreen.routeName: (ctx) => AdminVehiclesScreen(),
           DisablePlaceScreen.routeName: (ctx) => DisablePlaceScreen(),
         },
       ),

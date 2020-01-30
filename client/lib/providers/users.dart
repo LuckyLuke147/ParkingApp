@@ -6,9 +6,26 @@ import './user.dart';
 
 class Users with ChangeNotifier {
   List<User> _items = [];
+  User _currentUser;
 
   List<User> get items {
     return [..._items];
+  }
+
+  User get currentUser {
+    return _currentUser;
+  }
+
+  User findById(int id) {
+    User user = _items.firstWhere((value) => value.id == id);
+    _currentUser = user;
+    return user;
+  }
+
+  Future<void> removeCarById(int id) async {
+    final url = 'http://192.168.0.178:8080/vehicles/id';
+
+    await http.delete(url);
   }
 
   Future<List<User>> fetchAndSetUsers() async {

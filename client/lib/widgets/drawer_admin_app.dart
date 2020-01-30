@@ -95,7 +95,7 @@ class AdminAppDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-               Navigator.of(context).pushNamed(AdminVahiclesScreen .routeName);
+               Navigator.of(context).pushNamed(AdminVehiclesScreen.routeName);
             },
           ),
           Divider(),

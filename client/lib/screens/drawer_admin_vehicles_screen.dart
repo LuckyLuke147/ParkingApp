@@ -1,13 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/vehicle.dart';
+import '../providers/vehicles.dart';
 import './drawer_admin_members_details_screen.dart';
 
-class AdminVahiclesScreen extends StatefulWidget {
+class AdminVehiclesScreen extends StatefulWidget {
   static const routeName = '/admin_vehicles';
+
   @override
-  _AdminVahiclesScreenState createState() => _AdminVahiclesScreenState();
+  _AdminVehiclesScreenState createState() => _AdminVehiclesScreenState();
 }
 
 class Debouncer {
@@ -25,12 +29,17 @@ class Debouncer {
   }
 }
 
-class _AdminVahiclesScreenState extends State<AdminVahiclesScreen> {
+class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
   final List<String> items =
       new List<String>.generate(50, (i) => 'Items ${i + 1}');
 
   final _debouncer = Debouncer(milliseconds: 500);
   List<String> filteredUsers = List();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
@@ -109,7 +118,7 @@ class _AdminVahiclesScreenState extends State<AdminVahiclesScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Car_brand',
+                                'Car_model',
                                 style: TextStyle(
                                   fontSize: _width * 0.04,
                                   fontWeight: FontWeight.bold,

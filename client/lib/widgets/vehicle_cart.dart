@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/vehicle.dart';
+import '../providers/users.dart';
 
 class VehicleCart extends StatelessWidget {
   String id;
@@ -15,6 +19,7 @@ class VehicleCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Vehicle> vehicles = Provider.of<Users>(context).currentUser.vehicles;
     return Dismissible(
       key: ValueKey(id),
       background: Container(
@@ -73,6 +78,7 @@ class VehicleCart extends StatelessWidget {
                       ),
                       onPressed: () {
                         Navigator.of(ctx).pop(true);
+                        ;
                       },
                     ),
                   ],
