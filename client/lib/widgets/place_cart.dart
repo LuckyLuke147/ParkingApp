@@ -61,8 +61,7 @@ class PlaceCart extends StatelessWidget {
               ),
               Container(
                 height: 30,
-                child: VerticalDivider(
-                ),
+                child: VerticalDivider(),
               ),
               FlatButton(
                 child: Text(
@@ -110,8 +109,7 @@ class PlaceCart extends StatelessWidget {
             ),
           ),
           onTap: () {
-              Navigator.of(context)
-                        .pushNamed(DisablePlaceScreen.routeName);
+            Navigator.of(context).pushNamed(DisablePlaceScreen.routeName);
           },
         ),
       ),

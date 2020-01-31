@@ -19,7 +19,11 @@ class ReservationScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'Reservations',
-          style: TextStyle(color: Colors.white, fontSize: 25, letterSpacing: 0.92,),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 25,
+            letterSpacing: 0.92,
+          ),
         ),
         backgroundColor: Colors.orange,
       ),

@@ -7,7 +7,7 @@ class NewVehicle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       style: TextStyle(
         color: Colors.black,
         letterSpacing: 0.92,

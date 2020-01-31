@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/users.dart';
 import '../providers/vehicle.dart';
 import '../widgets/vehicle_cart.dart';
-import '../widgets/new_vehicle_dialog.dart';
 
 class VehiclesScreen extends StatefulWidget {
   static const routeName = '/vehicles';
@@ -14,7 +13,10 @@ class VehiclesScreen extends StatefulWidget {
 }
 
 class _VehiclesScreenState extends State<VehiclesScreen> {
-  TextEditingController brandController = TextEditingController();
+  final _myController = TextEditingController();
+
+  final _form = GlobalKey<FormState>();
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -25,6 +27,34 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
   void didChangeDependencies() {
     Provider.of<Users>(context).findById(1);
     super.didChangeDependencies();
+  }
+
+  var _newVehicle = Vehicle(
+    id: null,
+    brand: '',
+    model: '',
+    registration_no: '',
+  );
+
+  Future<void> _newVehicleForm() async {
+    if (_isLoading) {
+      return;
+    }
+    final isValid = _form.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    _form.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+
+    await Provider.of<Users>(context, listen: false).addVehicle(_newVehicle);
+
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   @override
@@ -61,18 +91,99 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                         letterSpacing: 0.92,
                       ),
                     ),
-                    content: Container(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            NewVehicle('Car brand'),
-                            SizedBox(height: 20),
-                            NewVehicle('Car model'),
-                            SizedBox(height: 20),
-                            NewVehicle('Registration No.'),
-                            SizedBox(height: 5),
-                          ],
+                    content: Form(
+                      key: _form,
+                      child: Container(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              TextFormField(
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  letterSpacing: 0.92,
+                                ),
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.orange),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.orange),
+                                  ),
+                                  hintText: 'Car brand',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black54,
+                                    letterSpacing: 0.92,
+                                  ),
+                                ),
+                                textAlign: TextAlign.end,
+                                onSaved: (value) {
+                                  setState(() {
+                                    _newVehicle.brand = value;
+                                  });
+                                },
+                              ),
+                              SizedBox(height: 20),
+                              TextFormField(
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  letterSpacing: 0.92,
+                                ),
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.orange),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.orange),
+                                  ),
+                                  hintText: 'Car model',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black54,
+                                    letterSpacing: 0.92,
+                                  ),
+                                ),
+                                textAlign: TextAlign.end,
+                                onSaved: (value) {
+                                  setState(() {
+                                    _newVehicle.model = value;
+                                  });
+                                },
+                              ),
+                              SizedBox(height: 20),
+                              TextFormField(
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  letterSpacing: 0.92,
+                                ),
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.orange),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.orange),
+                                  ),
+                                  hintText: 'Registration No.',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black54,
+                                    letterSpacing: 0.92,
+                                  ),
+                                ),
+                                textAlign: TextAlign.end,
+                                onSaved: (value) {
+                                  setState(() {
+                                    _newVehicle.registration_no = value;
+                                  });
+                                },
+                              ),
+                              SizedBox(height: 5),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -81,7 +192,6 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                         elevation: 5.0,
                         onPressed: () {
                           Navigator.of(context).pop();
-                          //vehicles.add(brandController.text);
                         },
                         child: Container(
                           padding:
@@ -101,6 +211,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                             ),
                             onTap: () {
                               print('Add new vehicle');
+                              _newVehicleForm();
                             },
                           ),
                         ),
@@ -118,8 +229,8 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         primary: false,
         itemCount: vehicles.length,
-        itemBuilder: (ctx, i) =>
-            VehicleCart(vehicles[i].id.toString(), vehicles[i].brand, vehicles[i].model, vehicles[i].registration_no),
+        itemBuilder: (ctx, i) => VehicleCart(vehicles[i].id.toString(),
+            vehicles[i].brand, vehicles[i].model, vehicles[i].registration_no),
       ),
     );
   }

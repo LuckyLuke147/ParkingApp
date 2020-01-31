@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
         //home: AdminOverviewScreen(),
         //home: UserOverviewScreen(),
         routes: {
+          SignInScreen.routeName: (ctx) => SignInScreen(),
           SignUpScreen.routeName: (ctx) => SignUpScreen(),
           UserOverviewScreen.routeName: (ctx) => UserOverviewScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),

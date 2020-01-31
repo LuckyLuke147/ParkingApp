@@ -95,7 +95,7 @@ class DropDownWidget extends State {
                                     letterSpacing: 0.92,
                                   ),
                                 ),
-                                onTap: (){
+                                onTap: () {
                                   print('Add new place');
                                 },
                               ),

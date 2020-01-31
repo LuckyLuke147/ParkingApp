@@ -1,8 +1,5 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-import 'package:provider/provider.dart';
 
 import '../widgets/question_modal_bottom_sheet.dart';
 import '../widgets/parking_details.dart';

@@ -45,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _saveForm() async {
-    if(_isLoading) {
+    if (_isLoading) {
       return;
     }
     final isValid = _form.currentState.validate();
@@ -59,8 +59,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_editedUser.id != null) {
       await Provider.of<Users>(context, listen: false)
           .updateUser(_editedUser.id, _editedUser);
-      print('User id: ' + _editedUser.id.toString());
-      print('User name: ' + _editedUser.name);
     }
     setState(() {
       _isLoading = false;
@@ -71,10 +69,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final _width = MediaQuery.of(context).size.width;
-
-    final userData = Provider.of<Users>(context);
-    final users = userData.items;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -138,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             initialValue: _editedUser.name,
                             decoration: InputDecoration(
-                              hintText: "first name",
+                              hintText: 'Name',
                               hintStyle: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,
@@ -181,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             initialValue: _editedUser.surname,
                             decoration: InputDecoration(
-                              hintText: "last name",
+                              hintText: 'Surname',
                               hintStyle: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,
@@ -225,7 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             initialValue: _editedUser.phoneNo.toString(),
                             decoration: InputDecoration(
-                              hintText: "phone no",
+                              hintText: 'Phone number',
                               hintStyle: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,

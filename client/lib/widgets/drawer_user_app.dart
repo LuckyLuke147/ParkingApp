@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/drawer_profile_screen.dart';
 import '../screens/drawer_user_reservations_screen.dart';
 import '../screens/drawer_user_vehicles_screen.dart';
+import '../screens/signIn_screen.dart';
 
 class UserAppDrawer extends StatelessWidget {
   @override
@@ -95,7 +96,7 @@ class UserAppDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.of(context).pushNamed(SignInScreen.routeName);
             },
           ),
         ],

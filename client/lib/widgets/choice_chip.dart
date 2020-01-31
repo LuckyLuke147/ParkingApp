@@ -9,7 +9,6 @@ class ChipWidget extends StatefulWidget {
 
 class _ChipWidgetState extends State<ChipWidget> {
   String selectedChoice = '';
-  // this function will build and return the choice list
   _buildChoiceList() {
     List<Widget> choices = List();
     widget.reportList.forEach((item) {

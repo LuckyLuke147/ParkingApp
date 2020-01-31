@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/vehicle.dart';
 import '../providers/users.dart';
 
-class VehicleCart extends StatelessWidget {
+class VehicleCart extends StatefulWidget {
   String id;
   String carBrand;
   String carModel;
@@ -18,10 +17,20 @@ class VehicleCart extends StatelessWidget {
   );
 
   @override
+  _VehicleCartState createState() => _VehicleCartState();
+}
+
+class _VehicleCartState extends State<VehicleCart> {
+  @override
+  void didChangeDependencies() {
+    Provider.of<Users>(context).findById(1);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List<Vehicle> vehicles = Provider.of<Users>(context).currentUser.vehicles;
     return Dismissible(
-      key: ValueKey(id),
+      key: ValueKey(widget.id),
       background: Container(
         color: Theme.of(context).errorColor,
         child: Icon(
@@ -76,17 +85,18 @@ class VehicleCart extends StatelessWidget {
                           color: Colors.red,
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         Navigator.of(ctx).pop(true);
-                        ;
+                        try {
+                          await Provider.of<Users>(context)
+                              .deleteVehicle(int.parse(widget.id));
+                        } catch (error) {}
                       },
                     ),
                   ],
                 ));
       },
-      onDismissed: (direction) {
-        //Provider.of<Cart>(context, listen: false).removeItem(productId);
-      },
+      onDismissed: (direction) {},
       child: Card(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
         child: ListTile(
@@ -103,14 +113,14 @@ class VehicleCart extends StatelessWidget {
             ),
           ),
           title: Text(
-            carBrand + ' ' + carModel,
+            widget.carBrand + ' ' + widget.carModel,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               letterSpacing: 0.92,
             ),
           ),
           subtitle: Text(
-            carRegistrationNo,
+            widget.carRegistrationNo,
             style: TextStyle(
               letterSpacing: 0.92,
             ),

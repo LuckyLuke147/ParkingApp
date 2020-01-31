@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import './user.dart';
+import './vehicle.dart';
 
 class Users with ChangeNotifier {
   List<User> _items = [];
@@ -20,12 +21,6 @@ class Users with ChangeNotifier {
     User user = _items.firstWhere((value) => value.id == id);
     _currentUser = user;
     return user;
-  }
-
-  Future<void> removeCarById(int id) async {
-    final url = 'http://192.168.0.178:8080/vehicles/id';
-
-    await http.delete(url);
   }
 
   Future<List<User>> fetchAndSetUsers() async {
@@ -98,6 +93,30 @@ class Users with ChangeNotifier {
     var matchingIdx = _items.indexWhere((user) => user.id == newUser);
     if (matchingIdx >= 0) {
       _items[matchingIdx] = newUser;
+    }
+  }
+
+  Future<void> addVehicle(Vehicle vehicle) async {
+    final url = 'http://192.168.0.178:8080/vehicles';
+
+    try {
+      await http.post(url,
+          headers: {"Content-type": "application/json"},
+          body: json.encode(vehicle.toJson()));
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
+
+  Future<void> deleteVehicle(int id) async {
+    final url = 'http://192.168.0.178:8080/vehicles/$id';
+
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      notifyListeners();
+      throw ('Could not delete product.');
     }
   }
 }
