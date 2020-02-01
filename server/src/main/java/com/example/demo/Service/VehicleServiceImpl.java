@@ -1,13 +1,19 @@
 package com.example.demo.Service;
 
+import com.example.demo.Entity.User;
 import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.Entity.Vehicle;
+import com.example.demo.Repository.UserRepository;
 import com.example.demo.Repository.VehicleRepository;
 import com.example.demo.Service.Interface.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
@@ -15,19 +21,44 @@ public class VehicleServiceImpl implements VehicleService {
     @Autowired
     VehicleRepository vehicleRepository;
 
-    @Override
+    @Autowired
+    UserRepository userRepository;
+
     public List<Vehicle> getAllVehicles() {
         return vehicleRepository.findAll();
     }
 
     @Override
-    public Vehicle getVehicleById(Long vehicleId) {
-        return vehicleRepository.findById(vehicleId).orElseThrow(() -> new ResourceNotFoundException("Vehicle", "id", vehicleId));
+    public Optional<Vehicle> getVehicleById(Long vehicleId) {
+        if (!vehicleRepository.existsById(vehicleId)) {
+            throw new ResourceNotFoundException("Vehicle", "id", vehicleId);
+        }
+        return vehicleRepository.findById(vehicleId);
     }
 
+
     @Override
-    public Vehicle addVehicle(Vehicle vehicle) {
-        return vehicleRepository.save(vehicle);
+    public Vehicle addVehicle(Long userId, Vehicle vehicle) {
+        Set<Vehicle> vehicles = new HashSet<>();
+        User user1 = new User();
+
+        Optional<User> byId = userRepository.findById(userId);
+        if (!byId.isPresent()) {
+            throw new ResourceNotFoundException("User", "id", userId);
+        }
+        User user = byId.get();
+
+        //tie User to Vehicle
+        vehicle.setUser(user);
+
+        Vehicle vehicle1 = vehicleRepository.save(vehicle);
+
+        //tie Vehicle to User
+        vehicles.add(vehicle1);
+
+        user1.setVehicles(vehicles);
+
+        return vehicle1;
     }
 
     @Override
@@ -43,9 +74,12 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void deleteVehicle(Long vehicleId) {
-        Vehicle user = vehicleRepository.findById(vehicleId).orElseThrow(() -> new ResourceNotFoundException("Vehicle", "vehicleID", vehicleId));
+    public ResponseEntity<Object> deleteVehicle(Long vehicleId) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new ResourceNotFoundException("Vehicle", "vehicleID", vehicleId));
 
-        vehicleRepository.delete(user);
+        vehicleRepository.delete(vehicle);
+
+        return ResponseEntity.ok().build();
     }
+
 }

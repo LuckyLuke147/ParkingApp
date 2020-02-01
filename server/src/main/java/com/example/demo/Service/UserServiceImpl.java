@@ -40,8 +40,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone_number(userDetails.getPhone_number());
         user.setPassword(userDetails.getPassword());
 
-        User updateUser = userRepository.save(user);
-        return updateUser;
+        return userRepository.save(user);
     }
 
     @Override
