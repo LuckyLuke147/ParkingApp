@@ -96,14 +96,17 @@ class Users with ChangeNotifier {
     }
   }
 
-  Future<void> addVehicle(Vehicle vehicle) async {
-    final url = 'http://192.168.0.178:8080/vehicles';
+  Future<void> addVehicle(int id, Vehicle vehicle) async {
+    final url = 'http://192.168.0.178:8080//users/$id/vehicle';
 
     try {
       await http.post(url,
           headers: {"Content-type": "application/json"},
           body: json.encode(vehicle.toJson()));
       notifyListeners();
+      print('brand: ' + vehicle.brand);
+      print('model: ' + vehicle.model);
+      print('registration_no: ' + vehicle.registration_no);
     } catch (error) {
       print(error);
       throw error;

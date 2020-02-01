@@ -25,7 +25,8 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
 
   @override
   void didChangeDependencies() {
-    Provider.of<Users>(context).findById(1);
+    var r = Provider.of<Users>(context).findById(1);
+    print('id: ' + r.id.toString());
     super.didChangeDependencies();
   }
 
@@ -49,7 +50,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
       _isLoading = true;
     });
 
-    await Provider.of<Users>(context, listen: false).addVehicle(_newVehicle);
+    await Provider.of<Users>(context, listen: false).addVehicle(8, _newVehicle);
 
     setState(() {
       _isLoading = false;
