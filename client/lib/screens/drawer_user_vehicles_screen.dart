@@ -23,13 +23,6 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    var r = Provider.of<Users>(context).findById(1);
-    print('id: ' + r.id.toString());
-    super.didChangeDependencies();
-  }
-
   var _newVehicle = Vehicle(
     id: null,
     brand: '',
@@ -37,7 +30,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
     registration_no: '',
   );
 
-  Future<void> _newVehicleForm() async {
+  Future<void> _addVehicle() async {
     if (_isLoading) {
       return;
     }
@@ -50,7 +43,8 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
       _isLoading = true;
     });
 
-    await Provider.of<Users>(context, listen: false).addVehicle(8, _newVehicle);
+    Users users = Provider.of<Users>(context, listen: false);
+    await users.addVehicle(users.currentUser.id, _newVehicle);
 
     setState(() {
       _isLoading = false;
@@ -60,7 +54,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Vehicle> vehicles = Provider.of<Users>(context).currentUser.vehicles;
+    List<Vehicle> vehicles = Provider.of<Users>(context, listen: true).currentUser.vehicles;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromRGBO(244, 244, 244, 1),
@@ -212,7 +206,7 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
                             ),
                             onTap: () {
                               print('Add new vehicle');
-                              _newVehicleForm();
+                              _addVehicle();
                             },
                           ),
                         ),

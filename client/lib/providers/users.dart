@@ -17,7 +17,12 @@ class Users with ChangeNotifier {
     return _currentUser;
   }
 
-  User findById(int id) {
+  Future<void> reloadCurrentUser() async {
+    await fetchAndSetUsers();
+    await findById(_currentUser.id);
+  }
+
+  Future<User> findById(int id) async {
     User user = _items.firstWhere((value) => value.id == id);
     _currentUser = user;
     return user;
@@ -103,6 +108,7 @@ class Users with ChangeNotifier {
       await http.post(url,
           headers: {"Content-type": "application/json"},
           body: json.encode(vehicle.toJson()));
+      await reloadCurrentUser();
       notifyListeners();
       print('brand: ' + vehicle.brand);
       print('model: ' + vehicle.model);
@@ -114,12 +120,15 @@ class Users with ChangeNotifier {
   }
 
   Future<void> deleteVehicle(int id) async {
-    final url = 'http://192.168.0.178:8080/vehicles/$id';
+    final url = 'http://192.168.0.178:8080/users/vehicle/$id';
 
     final response = await http.delete(url);
-    if (response.statusCode >= 400) {
+    if (response.statusCode != 200) {
       notifyListeners();
       throw ('Could not delete product.');
+    } else {
+      await reloadCurrentUser();
+      fetchAndSetUsers();
     }
   }
 }

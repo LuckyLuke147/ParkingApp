@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:parking_app/providers/users.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/custom_input_decoration.dart';
 import './overview_user_screen.dart';
@@ -20,6 +22,12 @@ class _SignInScreenState extends State<SignInScreen> {
   void dispose() {
     _passwordFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> simpleLogin() async {
+    Users users = Provider.of<Users>(context, listen: false);
+    await users.fetchAndSetUsers();
+    users.findById(1);
   }
 
   Future<void> _loginForm() async {
@@ -58,7 +66,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
+    final _height = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -138,8 +149,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                     onPressed: () {
-                       Navigator.of(context)
-                           .pushNamed(UserOverviewScreen.routeName);
+                      simpleLogin();
+                      Navigator.of(context)
+                          .pushNamed(UserOverviewScreen.routeName);
 //                       Navigator.of(context)
 //                           .pushNamed(AdminOverviewScreen.routeName);
                     },
