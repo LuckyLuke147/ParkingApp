@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:parking_app/providers/users_admin.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/users.dart';
@@ -45,7 +46,7 @@ class _MembersScreenState extends State<MembersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final users = Provider.of<Users>(context);
+    final usersAdmin = Provider.of<UsersAdmin>(context);
 
     final _width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -96,7 +97,7 @@ class _MembersScreenState extends State<MembersScreen> {
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              itemCount: users.items.length,
+              itemCount: usersAdmin.users.length,
               itemBuilder: (ctx, index) {
                 return GestureDetector(
                   onTap: () => {
@@ -113,9 +114,9 @@ class _MembersScreenState extends State<MembersScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                              users.items[index].name +
+                              usersAdmin.users[index].name +
                                   ' ' +
-                                  users.items[index].surname,
+                                  usersAdmin.users[index].surname,
                               style: TextStyle(
                                 fontSize: _width * 0.04,
                                 letterSpacing: 0.92,

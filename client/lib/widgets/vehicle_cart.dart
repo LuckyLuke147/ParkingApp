@@ -21,11 +21,6 @@ class VehicleCart extends StatefulWidget {
 }
 
 class _VehicleCartState extends State<VehicleCart> {
-  @override
-  void didChangeDependencies() {
-    Provider.of<Users>(context).findById(1);
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {

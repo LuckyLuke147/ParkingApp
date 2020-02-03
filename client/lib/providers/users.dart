@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -5,74 +6,39 @@ import 'package:http/http.dart' as http;
 import './user.dart';
 import './vehicle.dart';
 
-class Users with ChangeNotifier {
-  List<User> _items = [];
-  User _currentUser;
+const API_BASE_URL = 'http://192.168.0.178:8080';
 
-  List<User> get items {
-    return [..._items];
-  }
+class Users with ChangeNotifier {
+  User _currentUser;
 
   User get currentUser {
     return _currentUser;
   }
 
-  Future<void> reloadCurrentUser() async {
-    await fetchAndSetUsers();
+  Future<User> reloadCurrentUser() async {
     await findById(_currentUser.id);
+    notifyListeners();
+    return _currentUser;
   }
 
   Future<User> findById(int id) async {
-    User user = _items.firstWhere((value) => value.id == id);
-    _currentUser = user;
-    return user;
-  }
-
-  Future<List<User>> fetchAndSetUsers() async {
-    final url = 'http://192.168.0.178:8080/users/';
+    final url = '$API_BASE_URL/users/$id';
 
     try {
       final response = await http.get(url);
-      final extractedData = json.decode(response.body);
-      final List<User> loadedUsers = [];
-
-      extractedData.forEach((userData) {
-        loadedUsers.add(User.fromJson(userData));
-      });
-
-      _items = loadedUsers;
-      notifyListeners();
-
-      print(json.decode(response.body));
-
-      return _items;
+      if(response.statusCode == 200) {
+        _currentUser = User.fromJson(json.decode(response.body));
+        print("got " + _currentUser.toJson().toString());
+        return _currentUser;
+      } else {
+        throw ('Could not find user with id $id');
+      }
     } catch (error) {
       throw (error);
-    }
-  }
-
-  Future<void> addUser(User user) async {
-    final url = 'http://192.168.0.178:8080/users';
-
-    try {
-      final response = await http.post(url,
-          headers: {"Content-type": "application/json"},
-          body: json.encode(user.toJson()));
-
-      final newUser = User(
-        id: json.decode(response.body)['id'],
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        phoneNo: user.phoneNo,
-        password: user.password,
-      );
-      _items.add(newUser);
+    } finally {
       notifyListeners();
-    } catch (error) {
-      print(error);
-      throw error;
     }
+
   }
 
   Future<void> updateUser(int id, User newUser) async {
@@ -81,38 +47,26 @@ class Users with ChangeNotifier {
   }
 
   Future updateUserInternal(http.Client client, int id, User newUser) async {
-    final userIndex = 0;
-    if (userIndex >= 0) {
-      final url = 'http://192.168.0.178:8080/users/$id';
-      await client.put(url,
-          headers: {"Content-type": "application/json"},
-          body: json.encode(newUser.toJson()));
-      updateIfStored(newUser);
-      notifyListeners();
-    } else {
-      print('...');
-    }
+    final url = '$API_BASE_URL/users/$id';
+    await client.put(url,
+        headers: {"Content-type": "application/json"},
+        body: json.encode(newUser.toJson()));
+    notifyListeners();
   }
 
-  updateIfStored(newUser) {
-    var matchingIdx = _items.indexWhere((user) => user.id == newUser);
-    if (matchingIdx >= 0) {
-      _items[matchingIdx] = newUser;
-    }
-  }
 
   Future<void> addVehicle(int id, Vehicle vehicle) async {
-    final url = 'http://192.168.0.178:8080//users/$id/vehicle';
+    final url = '$API_BASE_URL/users/$id/vehicle';
 
     try {
-      await http.post(url,
+      final response = await http.post(url,
           headers: {"Content-type": "application/json"},
           body: json.encode(vehicle.toJson()));
-      await reloadCurrentUser();
-      notifyListeners();
-      print('brand: ' + vehicle.brand);
-      print('model: ' + vehicle.model);
-      print('registration_no: ' + vehicle.registration_no);
+      if(response.statusCode == 200) {
+        await reloadCurrentUser();
+      } else {
+        print("Could not add vehicle ${response.statusCode}");
+      }
     } catch (error) {
       print(error);
       throw error;
@@ -120,7 +74,7 @@ class Users with ChangeNotifier {
   }
 
   Future<void> deleteVehicle(int id) async {
-    final url = 'http://192.168.0.178:8080/users/vehicle/$id';
+    final url = '$API_BASE_URL/users/vehicle/$id';
 
     final response = await http.delete(url);
     if (response.statusCode != 200) {
@@ -128,7 +82,6 @@ class Users with ChangeNotifier {
       throw ('Could not delete product.');
     } else {
       await reloadCurrentUser();
-      fetchAndSetUsers();
     }
   }
 }

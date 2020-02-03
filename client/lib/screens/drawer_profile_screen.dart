@@ -33,10 +33,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _isLoading = true;
       });
       _isLoading = true;
-      Provider.of<Users>(context).fetchAndSetUsers().then((users) {
+      Provider.of<Users>(context).reloadCurrentUser().then((user) {
         setState(() {
           _isLoading = false;
-          _editedUser = users[0];
+          _editedUser = user;
         });
       });
     }

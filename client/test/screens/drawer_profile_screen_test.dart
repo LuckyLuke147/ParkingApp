@@ -20,8 +20,8 @@ main() {
         phoneNo: 5555555555,
         password: "test123");
 
-    when(mockUsers.fetchAndSetUsers())
-        .thenAnswer((_) => Future.value([u]));
+    //when(mockUsers.fetchAndSetUsers())
+    //    .thenAnswer((_) => Future.value([u]));
 
     await tester.pumpWidget(ChangeNotifierProvider<Users>.value(
       child: MaterialApp(
@@ -63,8 +63,8 @@ main() {
         phoneNo: 5555555555,
         password: "test123");
 
-    when(mockUsers.fetchAndSetUsers())
-        .thenAnswer((_) => Future.value([u]));
+    //when(mockUsers.fetchAndSetUsers())
+    //    .thenAnswer((_) => Future.value([u]));
 
     await tester.pumpWidget(ChangeNotifierProvider<Users>.value(
       child: MaterialApp(

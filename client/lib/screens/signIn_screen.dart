@@ -26,8 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future<void> simpleLogin() async {
     Users users = Provider.of<Users>(context, listen: false);
-    await users.fetchAndSetUsers();
-    users.findById(1);
+    await users.findById(1);
   }
 
   Future<void> _loginForm() async {
