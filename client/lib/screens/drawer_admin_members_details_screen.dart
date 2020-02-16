@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:parking_app/providers/user.dart';
+import 'package:parking_app/providers/users_admin.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/member_details_fields.dart';
+import 'drawer_admin_members_screen.dart';
 
 class MemberDetailsScreen extends StatelessWidget {
   static const routeName = '/members_details';
@@ -8,6 +12,8 @@ class MemberDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _width = MediaQuery.of(context).size.width;
+    UsersAdmin provider = Provider.of<UsersAdmin>(context);
+    User selectedUser = provider.users[provider.selectedUserIndex];
     return Scaffold(
       backgroundColor: Color.fromRGBO(244, 244, 244, 1),
       appBar: AppBar(
@@ -31,22 +37,23 @@ class MemberDetailsScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            MemberDetails(_width, 'Name', 'Name'),
+            MemberDetails(_width, 'Name', selectedUser.name),
             Divider(),
-            MemberDetails(_width, 'Surname', 'Surname'),
+            MemberDetails(_width, 'Surname', selectedUser.surname),
             Divider(),
-            MemberDetails(_width, 'Phone number', 1234567.toString()),
+            MemberDetails(
+                _width, 'Phone number', selectedUser.phoneNo.toString()),
             Divider(),
-            MemberDetails(_width, 'Email', 'mail@gmail.com'),
+            MemberDetails(_width, 'Email', selectedUser.email),
             Divider(),
             Expanded(
               child: ListView.builder(
                   padding: EdgeInsets.symmetric(vertical: 20),
-                  itemCount: 5,
+                  itemCount: selectedUser.vehicles.length,
                   itemBuilder: (ctx, index) {
                     return ListTile(
                       title: Text(
-                        'Honda',
+                        selectedUser.vehicles[index].brand,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: _width * 0.04,
@@ -55,7 +62,7 @@ class MemberDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       subtitle: Text(
-                        'Accord',
+                        selectedUser.vehicles[index].model,
                         style: TextStyle(
                           fontSize: _width * 0.04,
                           letterSpacing: 0.92,
@@ -63,7 +70,7 @@ class MemberDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       trailing: Text(
-                        'TNG1166',
+                        selectedUser.vehicles[index].registration_no,
                         style: TextStyle(
                           fontSize: _width * 0.04,
                           letterSpacing: 0.92,
@@ -139,8 +146,15 @@ class MemberDetailsScreen extends StatelessWidget {
                               color: Colors.red,
                             ),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             Navigator.of(ctx).pop(true);
+                            try {
+                              provider.deleteUser(selectedUser.id);
+                              Navigator.of(context).pushReplacementNamed(
+                                  MembersScreen.routeName);
+                            } catch (error) {}
+
+                            //Navigator.of(context).pushNamed(MembersScreen.routeName);
                           },
                         ),
                       ],

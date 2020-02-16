@@ -28,7 +28,7 @@ class UserAppDrawer extends StatelessWidget {
               ),
             ),
             accountName: Text(
-              "${users.currentUser.name} & ${users.currentUser.surname}",
+              "${users.currentUser.name} ${users.currentUser.surname}",
               style: TextStyle(
                 fontSize: _width * 0.048,
                 letterSpacing: 0.92,

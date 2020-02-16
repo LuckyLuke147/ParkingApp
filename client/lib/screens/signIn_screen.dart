@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parking_app/providers/user.dart';
 import 'package:parking_app/providers/users.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,7 @@ import './signUp_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   static const routeName = '/signin';
+
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
@@ -24,9 +26,18 @@ class _SignInScreenState extends State<SignInScreen> {
     super.dispose();
   }
 
-  Future<void> simpleLogin() async {
+  Future<User> simpleLogin() async {
     Users users = Provider.of<Users>(context, listen: false);
-    await users.findById(1);
+    User signedInUser = await users.findById(1);
+    return signedInUser;
+  }
+
+  void navigate(User signedInUser) {
+    if (signedInUser.isAdmin()) {
+      Navigator.of(context).pushNamed(AdminOverviewScreen.routeName);
+    } else {
+      Navigator.of(context).pushNamed(UserOverviewScreen.routeName);
+    }
   }
 
   Future<void> _loginForm() async {
@@ -65,10 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final _height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -148,11 +156,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                     onPressed: () {
-                      simpleLogin();
-                      Navigator.of(context)
-                          .pushNamed(UserOverviewScreen.routeName);
-//                       Navigator.of(context)
-//                           .pushNamed(AdminOverviewScreen.routeName);
+                      simpleLogin().then((user) => this.navigate(user));
                     },
                   ),
                 ),

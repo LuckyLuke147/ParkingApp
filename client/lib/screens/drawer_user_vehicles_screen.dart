@@ -13,8 +13,6 @@ class VehiclesScreen extends StatefulWidget {
 }
 
 class _VehiclesScreenState extends State<VehiclesScreen> {
-  final _myController = TextEditingController();
-
   final _form = GlobalKey<FormState>();
   var _isLoading = false;
 
@@ -54,7 +52,8 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Vehicle> vehicles = Provider.of<Users>(context, listen: true).currentUser.vehicles;
+    List<Vehicle> vehicles =
+        Provider.of<Users>(context, listen: true).currentUser.vehicles;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromRGBO(244, 244, 244, 1),

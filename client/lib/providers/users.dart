@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -26,7 +25,7 @@ class Users with ChangeNotifier {
 
     try {
       final response = await http.get(url);
-      if(response.statusCode == 200) {
+      if (response.statusCode == 200) {
         _currentUser = User.fromJson(json.decode(response.body));
         print("got " + _currentUser.toJson().toString());
         return _currentUser;
@@ -38,7 +37,6 @@ class Users with ChangeNotifier {
     } finally {
       notifyListeners();
     }
-
   }
 
   Future<void> updateUser(int id, User newUser) async {
@@ -54,7 +52,6 @@ class Users with ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> addVehicle(int id, Vehicle vehicle) async {
     final url = '$API_BASE_URL/users/$id/vehicle';
 
@@ -62,7 +59,7 @@ class Users with ChangeNotifier {
       final response = await http.post(url,
           headers: {"Content-type": "application/json"},
           body: json.encode(vehicle.toJson()));
-      if(response.statusCode == 200) {
+      if (response.statusCode == 200) {
         await reloadCurrentUser();
       } else {
         print("Could not add vehicle ${response.statusCode}");
@@ -79,7 +76,7 @@ class Users with ChangeNotifier {
     final response = await http.delete(url);
     if (response.statusCode != 200) {
       notifyListeners();
-      throw ('Could not delete product.');
+      throw ('Could not delete vehicle.');
     } else {
       await reloadCurrentUser();
     }

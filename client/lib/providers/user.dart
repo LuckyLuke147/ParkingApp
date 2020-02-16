@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parking_app/providers/role.dart';
 
 import './vehicle.dart';
 
@@ -10,6 +11,7 @@ class User {
   int phoneNo;
   String password;
   List<Vehicle> vehicles;
+  Role role;
 
   User({
     @required this.id,
@@ -19,6 +21,7 @@ class User {
     @required this.phoneNo,
     @required this.password,
     @required this.vehicles,
+    this.role
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -30,6 +33,13 @@ class User {
     password = json['password'];
     List vehiclesList = json['vehicles'];
     vehicles = vehiclesList.map((i) => Vehicle.fromJson(i)).toList();
+    if(json['role'] != null) {
+      role = Role.fromJson(json['role']);
+    }
+  }
+
+  bool isAdmin() {
+    return role != null && role.isAdmin;
   }
 
   Map<String, dynamic> toJson() => {

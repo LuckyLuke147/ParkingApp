@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:parking_app/providers/users.dart';
+import 'package:provider/provider.dart';
 
 import '../screens/drawer_profile_screen.dart';
 import '../screens/drawer_admin_members_screen.dart';
@@ -9,12 +11,13 @@ class AdminAppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _width = MediaQuery.of(context).size.width;
+    var users = Provider.of<Users>(context);
     return Drawer(
       child: Column(
         children: <Widget>[
           UserAccountsDrawerHeader(
             accountName: Text(
-              'Name & Surname (admin)',
+              '${users.currentUser.name} ${users.currentUser.surname} (Admin)',
               style: TextStyle(
                 fontSize: _width * 0.048,
                 letterSpacing: 0.92,
@@ -23,7 +26,7 @@ class AdminAppDrawer extends StatelessWidget {
               ),
             ),
             accountEmail: Text(
-              'mail@gmail.com (admin)',
+              '${users.currentUser.email}',
               style: TextStyle(
                 fontSize: _width * 0.035,
                 letterSpacing: 0.92,

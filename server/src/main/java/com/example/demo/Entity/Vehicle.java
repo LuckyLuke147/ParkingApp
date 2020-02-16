@@ -75,10 +75,10 @@ public class Vehicle {
     }
 
     //getter method to retrieve the UserId
+    @JsonIgnore
     public Long getUser_id() {
         return user.getId();
     }
-
 
     public User getUser() {
         return user;
