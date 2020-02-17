@@ -5,12 +5,14 @@ class Vehicle {
   String brand;
   String model;
   String registration_no;
+  int userId;
 
   Vehicle({
     @required this.id,
     @required this.brand,
     @required this.model,
     @required this.registration_no,
+    @required this.userId
   });
 
   Vehicle.fromJson(Map<String, dynamic> json) {
@@ -18,6 +20,7 @@ class Vehicle {
     brand = json['brand'];
     model = json['model'];
     registration_no = json['registration_no'];
+    userId = json['userId'];
   }
 
   Map<String, dynamic> toJson() => {
@@ -25,5 +28,6 @@ class Vehicle {
         'brand': brand,
         'model': model,
         'registration_no': registration_no,
+        'userId': userId
       };
 }

@@ -77,7 +77,7 @@ public class VehicleServiceImpl implements VehicleService {
     public ResponseEntity<Object> deleteVehicle(Long vehicleId) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new ResourceNotFoundException("Vehicle", "vehicleID", vehicleId));
 
-        Optional<User> byId = userRepository.findById(vehicle.getUser_id());
+        Optional<User> byId = userRepository.findById(vehicle.getUserId());
         if (byId.isPresent()) {
             User user = byId.get(); 
             user.getVehicles().removeIf(v -> (

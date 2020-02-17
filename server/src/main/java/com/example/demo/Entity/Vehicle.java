@@ -74,9 +74,7 @@ public class Vehicle {
         this.registration_no = registration_no;
     }
 
-    //getter method to retrieve the UserId
-    @JsonIgnore
-    public Long getUser_id() {
+    public Long getUserId() {
         return user.getId();
     }
 

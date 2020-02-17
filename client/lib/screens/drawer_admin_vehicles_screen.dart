@@ -124,7 +124,7 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
                     itemBuilder: (ctx, index) {
                       return GestureDetector(
                         onTap: () => {
-                          Provider.of<UsersAdmin>(context).selectVehicle(index),
+                          Provider.of<UsersAdmin>(context).selectUser(vehiclesAdmin.vehicles[index].userId),
                           Navigator.of(context)
                               .pushNamed(MemberDetailsScreen.routeName),
                               FocusScope.of(context).requestFocus(new FocusNode()),
