@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:parking_app/providers/place.dart';
+import 'package:parking_app/providers/places.dart';
+import 'package:provider/provider.dart';
 
 import './place_cart.dart';
 
@@ -8,6 +11,7 @@ class DropDown extends StatefulWidget {
 }
 
 class DropDownWidget extends State {
+  var _isInit = true;
   TextEditingController placeController = TextEditingController();
 
   List<String> spinnerItems = ['Kraków', 'Warszawa', 'Gdańsk'];

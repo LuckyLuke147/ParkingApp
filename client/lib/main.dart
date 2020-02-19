@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:parking_app/providers/places.dart';
 import 'package:parking_app/providers/users_admin.dart';
 import 'package:parking_app/widgets/drawer_admin_app.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(builder: (ctx) => Users()),
         ChangeNotifierProvider(builder: (ctx) => UsersAdmin()),
+        ChangeNotifierProvider(builder: (ctx) => Places()),
       ],
       child: MaterialApp(
         title: 'MyShop',

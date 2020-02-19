@@ -1,5 +1,10 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:parking_app/providers/place.dart';
+import 'package:parking_app/providers/places.dart';
+import 'package:parking_app/providers/users.dart';
+import 'package:parking_app/providers/vehicle.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/question_modal_bottom_sheet.dart';
 import '../widgets/parking_details.dart';
@@ -14,11 +19,17 @@ class UserOverviewScreen extends StatefulWidget {
 }
 
 class _UserOverviewScreenState extends State<UserOverviewScreen> {
+  var _isInit = true;
+  var _isLoading = false;
+
+  Places place;
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   VoidCallback _showPersBottomSheetCallBack;
   int _value = 0;
 
   List<String> cities = ['Krakow', 'Warszawa', 'Wrocław', 'Gdańsk', 'Szczecin'];
+
   List<String> hoursBegin = [
     '06:00',
     '06:30',
@@ -50,6 +61,8 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
     'VW Golf : KR88932'
   ];
 
+
+
   @override
   void initState() {
     super.initState();
@@ -57,6 +70,7 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
   }
 
   void _showBottomSheet() {
+    Provider.of<Places>(context).fetchAndSetPlaces();
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
     showModalBottomSheet(
@@ -183,8 +197,6 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var _openDrawer = false;
-
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
     return Scaffold(
