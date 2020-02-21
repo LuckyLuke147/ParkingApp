@@ -5,6 +5,7 @@ import com.example.demo.Entity.Vehicle;
 import com.example.demo.Service.UserServiceImpl;
 import com.example.demo.Service.VehicleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,15 @@ public class UserContoller {
     @GetMapping("/{id}")
     public User getUserById(@PathVariable(value = "id") Long userId) {
         return userServiceImpl.getUserById(userId);
+    }
+
+    @PostMapping("/signin")
+    public User signIn(@RequestBody User user) {
+        Optional<User> signedIn = userServiceImpl.signIn(user);
+        if(!signedIn.isPresent()){
+            throw new UserNotFoundException();
+        }
+        return signedIn.get();
     }
 
     @PostMapping
@@ -63,4 +73,10 @@ public class UserContoller {
         return vehicleServiceImpl.deleteVehicle(vehicleId);
     }
 
+    @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "User not found")
+    public class UserNotFoundException extends RuntimeException {
+    }
+
 }
+
+
