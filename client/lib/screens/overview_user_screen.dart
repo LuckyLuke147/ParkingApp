@@ -2,6 +2,8 @@ import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:parking_app/providers/place.dart';
 import 'package:parking_app/providers/places.dart';
+import 'package:parking_app/providers/reservation.dart';
+import 'package:parking_app/providers/reservations.dart';
 import 'package:parking_app/providers/users.dart';
 import 'package:parking_app/providers/vehicle.dart';
 import 'package:provider/provider.dart';
@@ -67,10 +69,13 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
   void initState() {
     super.initState();
     _showPersBottomSheetCallBack = _showBottomSheet;
+
   }
 
   void _showBottomSheet() {
     Provider.of<Places>(context).fetchAndSetPlaces();
+    Provider.of<Reservations>(context).initializeReservation();
+    Reservation res = Provider.of<Reservations>(context).currentReservation;
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
     showModalBottomSheet(
@@ -104,7 +109,12 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                     child: ListView.builder(
                       itemCount: 1,
                       itemBuilder: (ctx, i) {
-                        return ChipWidget(cities);
+                        return ChipWidget(cities, (selected) {
+                          setState(() {
+                            Provider.of<Reservations>(context).setCity(selected);
+                            print("Selected city $selected");
+                          });
+                        }, (){return Provider.of<Reservations>(context).currentReservation.city;});
                       },
                       scrollDirection: Axis.horizontal,
                     ),
@@ -116,8 +126,14 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                     color: Colors.white,
                     child: DatePickerTimeline(
                       DateTime.now(),
+                      selectionColor: Colors.orange,
                       onDateChange: (date) {
-                        // New date selected
+                        setState((){
+                          Provider.of<Reservations>(context).setFromDate(
+                              date.add(Duration(hours:res.fromDate.hour)).add(Duration(minutes:res.fromDate.minute)));
+                          Provider.of<Reservations>(context).setToDate(date
+                              .add(Duration(hours:res.toDate.hour)).add(Duration(minutes:res.toDate.minute)));
+                        });
                         print(date.day.toString());
                       },
                     ),
@@ -130,7 +146,16 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                     child: ListView.builder(
                       itemCount: 1,
                       itemBuilder: (ctx, i) {
-                        return ChipWidget(hoursBegin);
+                        return ChipWidget(hoursBegin, (selected) {
+                          setState((){
+                            List<String> parts = selected.toString().split(":");
+                            var fromDate = Provider.of<Reservations>(context).currentReservation.fromDate;
+                            var fromDay = new DateTime(fromDate.year, fromDate.month, fromDate.day);
+                            Provider.of<Reservations>(context).setFromDate(
+                                fromDay.add(Duration(hours:int.parse(parts[0]))).add(Duration(minutes:int.parse(parts[1]))));
+                            print("Set from ${Provider.of<Reservations>(context).currentReservation.fromDate}");
+                          });
+                        }, (){return "";});
                       },
                       scrollDirection: Axis.horizontal,
                     ),
@@ -143,7 +168,16 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                     child: ListView.builder(
                       itemCount: 1,
                       itemBuilder: (ctx, i) {
-                        return ChipWidget(hoursEnd);
+                        return ChipWidget(hoursEnd, (selected) {
+                          setState((){
+                            List<String> parts = selected.toString().split(":");
+                            var toDate = Provider.of<Reservations>(context).currentReservation.toDate;
+                            var toDay = new DateTime(toDate.year, toDate.month, toDate.day);
+                            Provider.of<Reservations>(context).setToDate(
+                                toDay.add(Duration(hours:int.parse(parts[0]))).add(Duration(minutes:int.parse(parts[1]))));
+                            print("Set to ${Provider.of<Reservations>(context).currentReservation.toDate}");
+                          });
+                        }, (){return "";});
                       },
                       scrollDirection: Axis.horizontal,
                     ),
@@ -156,7 +190,12 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                     child: ListView.builder(
                       itemCount: 1,
                       itemBuilder: (ctx, i) {
-                        return ChipWidget(cars);
+                        return ChipWidget(cars, (selected) {
+                          setState(() {
+                            Provider.of<Reservations>(context).currentReservation.car = selected;
+                            print("Selected car $selected");
+                          });
+                        }, (){return "";});
                       },
                       scrollDirection: Axis.horizontal,
                     ),
