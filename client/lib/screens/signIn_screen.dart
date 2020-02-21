@@ -20,6 +20,10 @@ class _SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   String _email, _password;
 
+  TextEditingController _passwordController = TextEditingController();
+
+  TextEditingController _emailController = TextEditingController();
+
   @override
   void dispose() {
     _passwordFocusNode.dispose();
@@ -28,7 +32,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future<User> simpleLogin() async {
     Users users = Provider.of<Users>(context, listen: false);
-    User signedInUser = await users.findById(85);
+    User signedInUser = await users.signIn(_emailController.text, _passwordController.text);
     return signedInUser;
   }
 
@@ -106,6 +110,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_passwordFocusNode);
                 },
+                controller: _emailController,
                 validator: (value) {
                   if (value.isEmpty || !value.contains('@')) {
                     return 'Invalid email!';
@@ -131,6 +136,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 onFieldSubmitted: (_) {
                   _loginForm();
                 },
+                controller: _passwordController,
                 validator: (value) {
                   if (value.isEmpty || value.length < 5) {
                     return 'Password is too short!';

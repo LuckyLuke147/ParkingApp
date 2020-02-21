@@ -50,7 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       _isLoading = true;
     });
-    await Provider.of<UsersAdmin>(context, listen: false).addUser(_newUser);
+    await Provider.of<Users>(context, listen: false).addUser(_newUser);
     setState(() {
       _isLoading = false;
     });

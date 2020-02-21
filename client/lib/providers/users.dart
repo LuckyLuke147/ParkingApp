@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:convert/convert.dart';
 import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
 
 import './user.dart';
 import './vehicle.dart';
@@ -36,6 +38,33 @@ class Users with ChangeNotifier {
       throw (error);
     } finally {
       notifyListeners();
+    }
+  }
+
+  Future<void> addUser(User user) async {
+    final url = '$API_BASE_URL/users';
+
+    try {
+      user.password = toMd5(user.password);
+      final response = await http.post(url,
+          headers: {"Content-type": "application/json"},
+          body: json.encode(user.toJson()));
+
+      if (response.statusCode == 201) {
+        final newUser = User(
+          id: json.decode(response.body)['id'],
+          name: user.name,
+          surname: user.surname,
+          email: user.email,
+          phoneNo: user.phoneNo,
+          password: user.password,
+        );
+        _currentUser = newUser;
+        notifyListeners();
+      }
+    } catch (error) {
+      print(error);
+      throw error;
     }
   }
 
@@ -80,5 +109,33 @@ class Users with ChangeNotifier {
     } else {
       await reloadCurrentUser();
     }
+  }
+
+  Future<User> signIn(String email, String password) async {
+    final url = '$API_BASE_URL/users/signin';
+
+    try {
+      User user = new User();
+      user.email = email;
+      user.password = toMd5(password);
+      print("password ${user.password}");
+      final response = await http.post(url,
+          headers: {"Content-type": "application/json"},
+          body: json.encode(user.toJson()));
+      if (response.statusCode == 200) {
+        _currentUser = User.fromJson(json.decode(response.body));
+        return _currentUser;
+      } else {
+        print("Could not add vehicle ${response.statusCode}");
+        _currentUser = null;
+      }
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
+
+  String toMd5(String value) {
+    return hex.encode(md5.convert(utf8.encode(value)).bytes);
   }
 }

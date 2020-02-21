@@ -1,5 +1,3 @@
-
-
 class Reservation {
   String city;
   DateTime fromDate;
