@@ -9,5 +9,4 @@ public interface PlaceService {
     public List<Place> getAllPlaces();
 
     public Place getPlaceById(Long placeId);
-
 }

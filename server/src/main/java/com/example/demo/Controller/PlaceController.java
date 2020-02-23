@@ -12,7 +12,6 @@ import java.util.List;
 @RequestMapping("/places")
 public class PlaceController {
 
-
     @Autowired
     PlaceServiceImpl placeServiceImpl;
 
@@ -25,5 +24,4 @@ public class PlaceController {
     public Place getPlaceById(@PathVariable(value = "id") Long placeId) {
         return placeServiceImpl.getPlaceById(placeId);
     }
-
 }

@@ -35,7 +35,7 @@ public class UserContoller {
     @PostMapping("/signin")
     public User signIn(@RequestBody User user) {
         Optional<User> signedIn = userServiceImpl.signIn(user);
-        if(!signedIn.isPresent()){
+        if (!signedIn.isPresent()) {
             throw new UserNotFoundException();
         }
         return signedIn.get();
@@ -76,7 +76,6 @@ public class UserContoller {
     @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "User not found")
     public class UserNotFoundException extends RuntimeException {
     }
-
 }
 
 

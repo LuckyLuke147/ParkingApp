@@ -79,15 +79,14 @@ public class VehicleServiceImpl implements VehicleService {
 
         Optional<User> byId = userRepository.findById(vehicle.getUserId());
         if (byId.isPresent()) {
-            User user = byId.get(); 
+            User user = byId.get();
             user.getVehicles().removeIf(v -> (
-                v.getId().equals(vehicle.getId())));
+                    v.getId().equals(vehicle.getId())));
         }
-        
+
 
         vehicleRepository.delete(vehicle);
-        
+
         return ResponseEntity.ok().build();
     }
-
 }
