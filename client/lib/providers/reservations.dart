@@ -8,6 +8,8 @@ import './vehicle.dart';
 
 class Reservations with ChangeNotifier {
   Reservation _currentReservation;
+  List<String> cities = ['Krakow', 'Warszawa', 'Wrocław', 'Gdańsk', 'Szczecin'];
+
 
   Reservation get currentReservation {
     return _currentReservation;
@@ -30,6 +32,10 @@ class Reservations with ChangeNotifier {
   }
   setToDate(DateTime toDate){
     _currentReservation.toDate = toDate;
+    notifyListeners();
+  }
+  setCar(String car){
+    _currentReservation.car = car;
     notifyListeners();
   }
 }

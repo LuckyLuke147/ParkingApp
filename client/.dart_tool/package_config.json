@@ -428,7 +428,7 @@
       "languageVersion": "2.2"
     }
   ],
-  "generated": "2020-02-19T18:28:08.585472Z",
+  "generated": "2020-02-21T15:18:34.581198Z",
   "generator": "pub",
-  "generatorVersion": "2.7.0"
+  "generatorVersion": "2.8.0-dev.8.0.flutter-514a8d4c84"
 }

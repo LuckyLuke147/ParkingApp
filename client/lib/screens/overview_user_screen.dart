@@ -1,5 +1,6 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:parking_app/providers/place.dart';
 import 'package:parking_app/providers/places.dart';
 import 'package:parking_app/providers/reservation.dart';
@@ -30,8 +31,6 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
   VoidCallback _showPersBottomSheetCallBack;
   int _value = 0;
 
-  List<String> cities = ['Krakow', 'Warszawa', 'Wrocław', 'Gdańsk', 'Szczecin'];
-
   List<String> hoursBegin = [
     '06:00',
     '06:30',
@@ -56,20 +55,16 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
     '19:00',
     '19:30'
   ];
-  List<String> cars = [
-    'Honda Accord : KR12345',
-    'BMW 3 : WE89324',
-    'Opel Insignia : PO43442',
-    'VW Golf : KR88932'
-  ];
-
-
 
   @override
   void initState() {
     super.initState();
     _showPersBottomSheetCallBack = _showBottomSheet;
+  }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   void _showBottomSheet() {
@@ -109,12 +104,21 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                     child: ListView.builder(
                       itemCount: 1,
                       itemBuilder: (ctx, i) {
-                        return ChipWidget(cities, (selected) {
+                        return ChipWidget(
+                            Provider.of<Places>(context)
+                                .places
+                                .map((p) => p.city)
+                                .toList(), (selected) {
                           setState(() {
-                            Provider.of<Reservations>(context).setCity(selected);
+                            Provider.of<Reservations>(context)
+                                .setCity(selected);
                             print("Selected city $selected");
                           });
-                        }, (){return Provider.of<Reservations>(context).currentReservation.city;});
+                        }, () {
+                          return Provider.of<Reservations>(context)
+                              .currentReservation
+                              .city;
+                        });
                       },
                       scrollDirection: Axis.horizontal,
                     ),
@@ -128,11 +132,13 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                       DateTime.now(),
                       selectionColor: Colors.orange,
                       onDateChange: (date) {
-                        setState((){
-                          Provider.of<Reservations>(context).setFromDate(
-                              date.add(Duration(hours:res.fromDate.hour)).add(Duration(minutes:res.fromDate.minute)));
+                        setState(() {
+                          Provider.of<Reservations>(context).setFromDate(date
+                              .add(Duration(hours: res.fromDate.hour))
+                              .add(Duration(minutes: res.fromDate.minute)));
                           Provider.of<Reservations>(context).setToDate(date
-                              .add(Duration(hours:res.toDate.hour)).add(Duration(minutes:res.toDate.minute)));
+                              .add(Duration(hours: res.toDate.hour))
+                              .add(Duration(minutes: res.toDate.minute)));
                         });
                         print(date.day.toString());
                       },
@@ -147,15 +153,24 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                       itemCount: 1,
                       itemBuilder: (ctx, i) {
                         return ChipWidget(hoursBegin, (selected) {
-                          setState((){
+                          setState(() {
                             List<String> parts = selected.toString().split(":");
-                            var fromDate = Provider.of<Reservations>(context).currentReservation.fromDate;
-                            var fromDay = new DateTime(fromDate.year, fromDate.month, fromDate.day);
+                            var fromDate = Provider.of<Reservations>(context)
+                                .currentReservation
+                                .fromDate;
+                            var fromDay = new DateTime(
+                                fromDate.year, fromDate.month, fromDate.day);
                             Provider.of<Reservations>(context).setFromDate(
-                                fromDay.add(Duration(hours:int.parse(parts[0]))).add(Duration(minutes:int.parse(parts[1]))));
-                            print("Set from ${Provider.of<Reservations>(context).currentReservation.fromDate}");
+                                fromDay
+                                    .add(Duration(hours: int.parse(parts[0])))
+                                    .add(Duration(
+                                        minutes: int.parse(parts[1]))));
+                            print(
+                                "Set from ${Provider.of<Reservations>(context).currentReservation.fromDate}");
                           });
-                        }, (){return "";});
+                        }, () {
+                          return DateFormat.Hm().format(Provider.of<Reservations>(context).currentReservation.fromDate);
+                        });
                       },
                       scrollDirection: Axis.horizontal,
                     ),
@@ -169,15 +184,22 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                       itemCount: 1,
                       itemBuilder: (ctx, i) {
                         return ChipWidget(hoursEnd, (selected) {
-                          setState((){
+                          setState(() {
                             List<String> parts = selected.toString().split(":");
-                            var toDate = Provider.of<Reservations>(context).currentReservation.toDate;
-                            var toDay = new DateTime(toDate.year, toDate.month, toDate.day);
-                            Provider.of<Reservations>(context).setToDate(
-                                toDay.add(Duration(hours:int.parse(parts[0]))).add(Duration(minutes:int.parse(parts[1]))));
-                            print("Set to ${Provider.of<Reservations>(context).currentReservation.toDate}");
+                            var toDate = Provider.of<Reservations>(context)
+                                .currentReservation
+                                .toDate;
+                            var toDay = new DateTime(
+                                toDate.year, toDate.month, toDate.day);
+                            Provider.of<Reservations>(context).setToDate(toDay
+                                .add(Duration(hours: int.parse(parts[0])))
+                                .add(Duration(minutes: int.parse(parts[1]))));
+                            print(
+                                "Set to ${Provider.of<Reservations>(context).currentReservation.toDate}");
                           });
-                        }, (){return "";});
+                        }, () {
+                          return "";
+                        });
                       },
                       scrollDirection: Axis.horizontal,
                     ),
@@ -190,12 +212,23 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                     child: ListView.builder(
                       itemCount: 1,
                       itemBuilder: (ctx, i) {
-                        return ChipWidget(cars, (selected) {
+                        return ChipWidget(
+                            Provider.of<Users>(context)
+                                .currentUser
+                                .vehicles
+                                .map((v) => v.getName())
+                                .toList(), (selected) {
                           setState(() {
-                            Provider.of<Reservations>(context).currentReservation.car = selected;
+                            Provider.of<Reservations>(context).setCar(selected);
                             print("Selected car $selected");
                           });
-                        }, (){return "";});
+                        }, () {
+                          var car = Provider.of<Reservations>(context)
+                              .currentReservation
+                              .car;
+                          print("Returning $car");
+                          return car;
+                        });
                       },
                       scrollDirection: Axis.horizontal,
                     ),

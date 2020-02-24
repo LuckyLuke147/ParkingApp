@@ -30,4 +30,8 @@ class Vehicle {
         'registration_no': registration_no,
         'userId': userId
       };
+
+  String getName(){
+    return "$brand $model $registration_no";
+  }
 }

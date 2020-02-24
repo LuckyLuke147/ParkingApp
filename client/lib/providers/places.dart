@@ -11,7 +11,7 @@ class Places with ChangeNotifier {
   int _selectedPlaceIndex;
 
   List<Place> get places {
-    return [...places];
+    return [..._places];
   }
 
   int get selectedPlaceIndex {

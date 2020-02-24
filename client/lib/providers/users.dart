@@ -60,6 +60,7 @@ class Users with ChangeNotifier {
           password: user.password,
         );
         _currentUser = newUser;
+        print("user ${_currentUser.toString()}");
         notifyListeners();
       }
     } catch (error) {
