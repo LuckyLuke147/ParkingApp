@@ -198,7 +198,7 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                                 "Set to ${Provider.of<Reservations>(context).currentReservation.toDate}");
                           });
                         }, () {
-                          return "";
+                          return DateFormat.Hm().format(Provider.of<Reservations>(context).currentReservation.toDate);
                         });
                       },
                       scrollDirection: Axis.horizontal,
