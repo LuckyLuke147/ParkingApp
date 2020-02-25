@@ -15,12 +15,12 @@ public class PlaceController {
     @Autowired
     PlaceServiceImpl placeServiceImpl;
 
-    @GetMapping
+    @GetMapping(produces = "application/json; charset=UTF-8")
     public List<Place> getAllPlaces() {
         return placeServiceImpl.getAllPlaces();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
     public Place getPlaceById(@PathVariable(value = "id") Long placeId) {
         return placeServiceImpl.getPlaceById(placeId);
     }

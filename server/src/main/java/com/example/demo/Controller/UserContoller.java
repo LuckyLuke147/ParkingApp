@@ -42,8 +42,8 @@ public class UserContoller {
     }
 
     @PostMapping
-    public User addUser(@RequestBody User user) {
-        return userServiceImpl.addUser(user);
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        return new ResponseEntity<>(userServiceImpl.addUser(user), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
