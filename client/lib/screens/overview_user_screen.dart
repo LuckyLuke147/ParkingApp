@@ -72,8 +72,6 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
     city: ' ',
     fromDate: null,
     toDate: null,
-    timeBegin: '',
-    timeEnd: ' ',
     car: '',
     userId: null,
   );

@@ -6,8 +6,6 @@ class Reservation {
   String city;
   DateTime fromDate;
   DateTime toDate;
-  String timeBegin;
-  String timeEnd;
   String car;
   int userId;
 
@@ -16,8 +14,6 @@ class Reservation {
     @required this.city,
     @required this.fromDate,
     @required this.toDate,
-    @required this.timeBegin,
-    @required this.timeEnd,
     @required this.car,
     @required this.userId,
   });
@@ -27,8 +23,6 @@ class Reservation {
     city = json[''];
     fromDate = json[''];
     toDate = json[''];
-    timeBegin = json[''];
-    timeEnd = json[''];
     car = json[''];
     userId = json['userId'];
   }
@@ -38,9 +32,7 @@ class Reservation {
         'city': city,
         'fromDate': fromDate,
         'toDate': toDate,
-        'timeBegin': timeBegin,
-        'timeEnd': timeEnd,
         'car': car,
-        'userId': userId
+        'userId': userId,
       };
 }
