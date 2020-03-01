@@ -6,15 +6,45 @@ import 'package:provider/provider.dart';
 import '../widgets/member_details_fields.dart';
 import 'drawer_admin_members_screen.dart';
 
-class MemberDetailsScreen extends StatelessWidget {
+class MemberDetailsScreen extends StatefulWidget {
   static const routeName = '/members_details';
 
   @override
+  _MemberDetailsScreenState createState() => _MemberDetailsScreenState();
+}
+
+class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
+  var _isInit = true;
+  var _isLoading = false;
+
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      _isLoading = true;
+      Provider.of<UsersAdmin>(context).fetchAndSetUsers().then((users) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
+
+
+  @override
   Widget build(BuildContext context) {
+
     final _width = MediaQuery.of(context).size.width;
     UsersAdmin provider = Provider.of<UsersAdmin>(context);
     User selectedUser = provider.users[provider.selectedUserIndex];
-    return Scaffold(
+    return _isLoading ?  Container() :
+     Scaffold(
       backgroundColor: Color.fromRGBO(244, 244, 244, 1),
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -168,4 +198,6 @@ class MemberDetailsScreen extends StatelessWidget {
       ),
     );
   }
+
+
 }

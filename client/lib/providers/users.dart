@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:convert/convert.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
+import 'package:parking_app/providers/reservation.dart';
 
 import './user.dart';
 import './vehicle.dart';
@@ -89,6 +90,24 @@ class Users with ChangeNotifier {
       final response = await http.post(url,
           headers: {"Content-type": "application/json"},
           body: json.encode(vehicle.toJson()));
+      if (response.statusCode == 200) {
+        await reloadCurrentUser();
+      } else {
+        print("Could not add vehicle ${response.statusCode}");
+      }
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
+
+  Future<void> addReservation(int id, Reservation reservation) async {
+    final url = '$API_BASE_URL/users/$id/vehicle';
+
+    try {
+      final response = await http.post(url,
+          headers: {"Content-type": "application/json"},
+          body: json.encode(reservation.toJson()));
       if (response.statusCode == 200) {
         await reloadCurrentUser();
       } else {

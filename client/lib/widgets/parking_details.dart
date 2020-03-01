@@ -52,7 +52,8 @@ class ParkingDetails extends StatelessWidget {
             Column(
               children: <Widget>[
                 Text(
-                  DateFormat('EEE, MMM d').format(DateTime.now()),
+                  'Mon, Jan 13',
+                  //DateFormat('EEE, MMM d').format(DateTime.now()),
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -60,7 +61,8 @@ class ParkingDetails extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  DateFormat('h:mm a').format(DateTime.now()),
+                  '7:30 AM',
+//                  DateFormat('h:mm a').format(DateTime.now()),
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
@@ -87,7 +89,8 @@ class ParkingDetails extends StatelessWidget {
             Column(
               children: <Widget>[
                 Text(
-                  DateFormat('EEE, MMM d').format(DateTime.now()),
+                  'Mon, Jan 13',
+//                  DateFormat('EEE, MMM d').format(DateTime.now()),
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -95,7 +98,8 @@ class ParkingDetails extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  DateFormat('h:mm a').format(DateTime.now()),
+                  '5:30 PM',
+//                  DateFormat('h:mm a').format(DateTime.now()),
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,

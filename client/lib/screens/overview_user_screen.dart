@@ -27,7 +27,7 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
 
   Places place;
 
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<FormState>();
   VoidCallback _showPersBottomSheetCallBack;
   int _value = 0;
 
@@ -65,6 +65,39 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+  }
+
+  var _newReservation = Reservation(
+    id: null,
+    city: ' ',
+    fromDate: null,
+    toDate: null,
+    timeBegin: '',
+    timeEnd: ' ',
+    car: '',
+    userId: null,
+  );
+
+  Future<void> _addReservation() async {
+//    if (_isLoading) {
+//      return;
+//    }
+//    final isValid = _scaffoldKey.currentState.validate();
+//    if (!isValid) {
+//      return;
+//    }
+//    _scaffoldKey.currentState.save();
+//    setState(() {
+//      _isLoading = true;
+//    });
+
+    Users users = Provider.of<Users>(context, listen: false);
+    await users.addReservation(users.currentUser.id, _newReservation);
+    print(users.toString() + '<=------------------');
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   void _showBottomSheet() {
@@ -169,7 +202,10 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                                 "Set from ${Provider.of<Reservations>(context).currentReservation.fromDate}");
                           });
                         }, () {
-                          return DateFormat.Hm().format(Provider.of<Reservations>(context).currentReservation.fromDate);
+                          return DateFormat.Hm().format(
+                              Provider.of<Reservations>(context)
+                                  .currentReservation
+                                  .fromDate);
                         });
                       },
                       scrollDirection: Axis.horizontal,
@@ -198,7 +234,10 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                                 "Set to ${Provider.of<Reservations>(context).currentReservation.toDate}");
                           });
                         }, () {
-                          return DateFormat.Hm().format(Provider.of<Reservations>(context).currentReservation.toDate);
+                          return DateFormat.Hm().format(
+                              Provider.of<Reservations>(context)
+                                  .currentReservation
+                                  .toDate);
                         });
                       },
                       scrollDirection: Axis.horizontal,
@@ -254,6 +293,7 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                         ),
                         onPressed: () {
                           print('Book now');
+                          _addReservation();
                         },
                       ),
                     ),

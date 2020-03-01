@@ -32,6 +32,6 @@ class Vehicle {
       };
 
   String getName(){
-    return "$brand $model $registration_no";
+    return "$brand $model : $registration_no";
   }
 }
