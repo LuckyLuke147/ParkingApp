@@ -1,5 +1,6 @@
 package com.example.demo.Service.Interface;
 
+import com.example.demo.Entity.Reservation;
 import com.example.demo.Entity.User;
 
 import java.util.List;
@@ -17,4 +18,9 @@ public interface UserService {
     public void deleteUser(Long userId);
 
     public Optional<User> signIn(User user);
+
+    Reservation addReservation(Long userId, Reservation reservation);
 }
+
+
+

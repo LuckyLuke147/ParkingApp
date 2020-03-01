@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Entity.Reservation;
 import com.example.demo.Entity.User;
 import com.example.demo.Entity.Vehicle;
 import com.example.demo.Service.UserServiceImpl;
@@ -76,6 +77,19 @@ public class UserContoller {
     @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "User not found")
     public class UserNotFoundException extends RuntimeException {
     }
+
+    //Reservation
+    @GetMapping("/reservations")
+    public List<Reservation> getReservations() {
+        return userServiceImpl.getAllReservations();
+    }
+
+
+    @PostMapping("/{userId}/reservation")
+    public Reservation addReservationByUser(@PathVariable(value = "userId") Long userId, @RequestBody Reservation reservation) {
+        return userServiceImpl.addReservation(userId, reservation);
+    }
+
 }
 
 

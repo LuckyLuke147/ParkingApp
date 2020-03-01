@@ -33,6 +33,11 @@ public class Vehicle {
     @JsonIgnore
     private User user;
 
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "vehicle")
+    @JsonIgnore
+    private Reservation reservation;
+
     public Vehicle() {
     }
 
@@ -41,6 +46,7 @@ public class Vehicle {
         this.model = model;
         this.registration_no = registration_no;
     }
+
 
     public Long getId() {
         return id;

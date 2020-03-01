@@ -1,7 +1,9 @@
 package com.example.demo.Service;
 
+import com.example.demo.Entity.Reservation;
 import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.Entity.User;
+import com.example.demo.Repository.ReservationRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.Interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ReservationRepository reservationRepository;
+
 
     @Override
     public List<User> getAllUsers() {
@@ -59,4 +65,18 @@ public class UserServiceImpl implements UserService {
         example.setPassword(user.getPassword());
         return userRepository.findOne(Example.of(example));
     }
+
+    @Override
+    public Reservation addReservation(Long userId, Reservation reservation) {
+        reservationRepository.save(reservation);
+        User user = userRepository.findById(userId).get();
+        user.setReservation(reservation);
+        return reservation;
+    }
+
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
+    }
 }
+
+

@@ -28,6 +28,7 @@ public class Place {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "place", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<ParkingSpace> parking_space;
 
+    //private
 
     public Place() {
     }
