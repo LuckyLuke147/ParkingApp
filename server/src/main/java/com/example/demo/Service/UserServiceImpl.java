@@ -1,10 +1,11 @@
 package com.example.demo.Service;
 
-import com.example.demo.Entity.Reservation;
+import com.example.demo.Entity.*;
 import com.example.demo.Exception.ResourceNotFoundException;
-import com.example.demo.Entity.User;
+import com.example.demo.Repository.PlaceRepository;
 import com.example.demo.Repository.ReservationRepository;
 import com.example.demo.Repository.UserRepository;
+import com.example.demo.Repository.VehicleRepository;
 import com.example.demo.Service.Interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -21,6 +22,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     ReservationRepository reservationRepository;
+
+    @Autowired
+    VehicleRepository vehicleRepository;
+
+    @Autowired
+    PlaceRepository placeRepository;
 
 
     @Override
@@ -68,9 +75,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Reservation addReservation(Long userId, Reservation reservation) {
-        reservationRepository.save(reservation);
         User user = userRepository.findById(userId).get();
-        user.setReservation(reservation);
+
+
+        if (user.getReservation() != null) {
+            throw new RuntimeException("Uzytkownik ma rezerwacje");
+        }
+
+        Optional<Vehicle> vehicle = vehicleRepository.findById(reservation.getVehicleId());
+        reservation.setVehicle(vehicle.get());
+        Optional<Place> place = placeRepository.findById(reservation.getPlaceId());
+        ParkingSpace selectedSpace = null;
+        for (ParkingSpace space : place.get().getParking_space()) {
+            if (space.isFree()) {
+                selectedSpace = space;
+            }
+        }
+        reservation.setSpaceId(selectedSpace.getId());
+        selectedSpace.setFree(false);
+
+        reservation.setUser(user);
+
+        reservationRepository.save(reservation);
         return reservation;
     }
 

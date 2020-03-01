@@ -1,6 +1,7 @@
 package com.example.demo.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -15,23 +16,32 @@ public class Reservation {
     private Long id;
 
     @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "space_id", updatable = false, insertable = false)
     @JsonIgnore
-    private Place place;
+    private ParkingSpace space;
 
-    @Column(name = "date")
-    private Date date;
+    @Column(name = "space_id")
+    private Long spaceId;
 
-    @Column(name = "timeBegin")
-    private String time_start;
 
-    @Column(name = "timeEnd")
-    private String time_end;
+    @Column(name = "time_begin")
+    private Date dateTimeStart;
+
+    @Column(name = "time_end")
+    private Date dateTimeEnd;
 
     @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "vehicle_id")
+    @JoinColumn(name = "vehicle_id", updatable = false, insertable = false)
     @JsonIgnore
-    private Vehicle vehicle;
+    private Vehicle vehicle = new Vehicle();
+
+    @Column(name = "vehicle_id")
+    private Long vehicleId;
+
+    @JsonProperty
+    private Long placeId;
+
+
 
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
@@ -42,40 +52,56 @@ public class Reservation {
         return id;
     }
 
+    public Long getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(Long placeId) {
+        this.placeId = placeId;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Place getPlace() {
-        return place;
+    public Long getVehicleId() {
+        return vehicleId;
     }
 
-    public void setPlace(Place place) {
-        this.place = place;
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
     }
 
-    public Date getDate() {
-        return date;
+    public ParkingSpace getSpace() {
+        return space;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setSpace(ParkingSpace space) {
+        this.space = space;
     }
 
-    public String getTime_start() {
-        return time_start;
+    public Long getSpaceId() {
+        return spaceId;
     }
 
-    public void setTime_start(String time_start) {
-        this.time_start = time_start;
+    public void setSpaceId(Long spaceId) {
+        this.spaceId = spaceId;
     }
 
-    public String getTime_end() {
-        return time_end;
+    public Date getDateTimeStart() {
+        return dateTimeStart;
     }
 
-    public void setTime_end(String time_end) {
-        this.time_end = time_end;
+    public void setDateTimeStart(Date dateTimeStart) {
+        this.dateTimeStart = dateTimeStart;
+    }
+
+    public Date getDateTimeEnd() {
+        return dateTimeEnd;
+    }
+
+    public void setDateTimeEnd(Date dateTimeEnd) {
+        this.dateTimeEnd = dateTimeEnd;
     }
 
     public Vehicle getVehicle() {
