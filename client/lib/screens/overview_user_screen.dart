@@ -67,14 +67,6 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
     super.didChangeDependencies();
   }
 
-  var _newReservation = Reservation(
-    id: null,
-    city: ' ',
-    fromDate: null,
-    toDate: null,
-    car: '',
-    userId: null,
-  );
 
   Future<void> _addReservation() async {
 //    if (_isLoading) {
@@ -90,12 +82,23 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
 //    });
 
     Users users = Provider.of<Users>(context, listen: false);
-    await users.addReservation(users.currentUser.id, _newReservation);
+    Reservation reservation = Provider.of<Reservations>(context).currentReservation;
+    print("Res ${reservation.toJson()}");
+    await users.addReservation(users.currentUser.id, reservation);
     print(users.toString() + '<=------------------');
     setState(() {
       _isLoading = false;
     });
     Navigator.of(context).pop();
+  }
+
+  int getIndex(List<String> list, String value){
+    for(int i=0; i < list.length; i++) {
+      if(list[i] == value) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   void _showBottomSheet() {
@@ -138,17 +141,17 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                         return ChipWidget(
                             Provider.of<Places>(context)
                                 .places
-                                .map((p) => p.city)
-                                .toList(), (selected) {
+                                .map((p) => Selectable(p.id, p.city))
+                                .toList(), (Selectable selected) {
                           setState(() {
                             Provider.of<Reservations>(context)
-                                .setCity(selected);
-                            print("Selected city $selected");
+                                .setCity(selected.id);
+                            print("Selected city ${selected.label}");
                           });
                         }, () {
                           return Provider.of<Reservations>(context)
                               .currentReservation
-                              .city;
+                              .placeId;
                         });
                       },
                       scrollDirection: Axis.horizontal,
@@ -160,9 +163,10 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                     height: 90,
                     color: Colors.white,
                     child: DatePickerTimeline(
-                      DateTime.now(),
+                      res.fromDate,
                       selectionColor: Colors.orange,
                       onDateChange: (date) {
+                        print("Selecting $date");
                         setState(() {
                           Provider.of<Reservations>(context).setFromDate(date
                               .add(Duration(hours: res.fromDate.hour))
@@ -183,9 +187,11 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                     child: ListView.builder(
                       itemCount: 1,
                       itemBuilder: (ctx, i) {
-                        return ChipWidget(hoursBegin, (selected) {
+                        return ChipWidget(hoursBegin.asMap().entries
+                            .map((e) => Selectable(e.key, e.value))
+                            .toList(), (Selectable selected) {
                           setState(() {
-                            List<String> parts = selected.toString().split(":");
+                            List<String> parts = selected.label.split(":");
                             var fromDate = Provider.of<Reservations>(context)
                                 .currentReservation
                                 .fromDate;
@@ -200,10 +206,11 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                                 "Set from ${Provider.of<Reservations>(context).currentReservation.fromDate}");
                           });
                         }, () {
-                          return DateFormat.Hm().format(
+                          var time = DateFormat.Hm().format(
                               Provider.of<Reservations>(context)
                                   .currentReservation
                                   .fromDate);
+                          return getIndex(hoursBegin, time);
                         });
                       },
                       scrollDirection: Axis.horizontal,
@@ -217,9 +224,11 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                     child: ListView.builder(
                       itemCount: 1,
                       itemBuilder: (ctx, i) {
-                        return ChipWidget(hoursEnd, (selected) {
+                        return ChipWidget(hoursEnd.asMap().entries
+                            .map((e) => Selectable(e.key, e.value))
+                            .toList(), (Selectable selected) {
                           setState(() {
-                            List<String> parts = selected.toString().split(":");
+                            List<String> parts = selected.label.split(":");
                             var toDate = Provider.of<Reservations>(context)
                                 .currentReservation
                                 .toDate;
@@ -232,10 +241,11 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                                 "Set to ${Provider.of<Reservations>(context).currentReservation.toDate}");
                           });
                         }, () {
-                          return DateFormat.Hm().format(
+                          var time = DateFormat.Hm().format(
                               Provider.of<Reservations>(context)
                                   .currentReservation
                                   .toDate);
+                          return getIndex(hoursEnd, time);
                         });
                       },
                       scrollDirection: Axis.horizontal,
@@ -253,16 +263,16 @@ class _UserOverviewScreenState extends State<UserOverviewScreen> {
                             Provider.of<Users>(context)
                                 .currentUser
                                 .vehicles
-                                .map((v) => v.getName())
-                                .toList(), (selected) {
+                                .map((v) => Selectable(v.id, v.getName()))
+                                .toList(), (Selectable selected) {
                           setState(() {
-                            Provider.of<Reservations>(context).setCar(selected);
+                            Provider.of<Reservations>(context).setCar(selected.id);
                             print("Selected car $selected");
                           });
                         }, () {
                           var car = Provider.of<Reservations>(context)
                               .currentReservation
-                              .car;
+                              .vehicleId;
                           print("Returning $car");
                           return car;
                         });

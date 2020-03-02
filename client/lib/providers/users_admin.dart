@@ -6,8 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:parking_app/providers/vehicle.dart';
 
 import './user.dart';
-
-const API_BASE_URL = 'http://192.168.0.178:8080';
+import 'config.dart';
 
 class UsersAdmin with ChangeNotifier {
   List<User> _users = [];

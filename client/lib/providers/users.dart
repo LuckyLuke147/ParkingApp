@@ -7,8 +7,7 @@ import 'package:parking_app/providers/reservation.dart';
 
 import './user.dart';
 import './vehicle.dart';
-
-const API_BASE_URL = 'http://192.168.0.178:8080';
+import 'config.dart';
 
 class Users with ChangeNotifier {
   User _currentUser;

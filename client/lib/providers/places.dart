@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:parking_app/providers/place.dart';
 
-const API_BASE_URL = 'http://192.168.0.178:8080';
+import 'config.dart';
 
 class Places with ChangeNotifier {
   List<Place> _places = [];

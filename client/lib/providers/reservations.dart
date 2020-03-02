@@ -21,8 +21,8 @@ class Reservations with ChangeNotifier {
     _currentReservation.toDate = DateTime.now();
   }
 
-  setCity(String city){
-    _currentReservation.city = city;
+  setCity(int placeId){
+    _currentReservation.placeId = placeId;
     notifyListeners();
   }
 
@@ -34,8 +34,8 @@ class Reservations with ChangeNotifier {
     _currentReservation.toDate = toDate;
     notifyListeners();
   }
-  setCar(String car){
-    _currentReservation.car = car;
+  setCar(int vehicleId){
+    _currentReservation.vehicleId = vehicleId;
     notifyListeners();
   }
 }

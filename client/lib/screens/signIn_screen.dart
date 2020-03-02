@@ -34,7 +34,7 @@ class _SignInScreenState extends State<SignInScreen> {
     Users users = Provider.of<Users>(context, listen: false);
     //User signedInUser = await users.findById(85);
 
-    User signedInUser = await users.signIn(_emailController.text, _passwordController.text);
+    User signedInUser = await users.signIn(_emailController.text.trim(), _passwordController.text.trim());
     return signedInUser;
   }
 

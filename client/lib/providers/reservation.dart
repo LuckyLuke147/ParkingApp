@@ -3,36 +3,36 @@ import 'package:parking_app/providers/vehicle.dart';
 
 class Reservation {
   int id;
-  String city;
+  int placeId;
   DateTime fromDate;
   DateTime toDate;
-  String car;
+  int vehicleId;
   int userId;
 
   Reservation({
     @required this.id,
-    @required this.city,
+    @required this.placeId,
     @required this.fromDate,
     @required this.toDate,
-    @required this.car,
+    @required this.vehicleId,
     @required this.userId,
   });
 
   Reservation.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    city = json[''];
+    vehicleId = json[''];
     fromDate = json[''];
     toDate = json[''];
-    car = json[''];
+    placeId = json[''];
     userId = json['userId'];
   }
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'city': city,
-        'fromDate': fromDate,
-        'toDate': toDate,
-        'car': car,
+        'placeId': placeId,
+        'fromDate': fromDate.toIso8601String(),
+        'toDate': toDate.toIso8601String(),
+        'vehicleId': vehicleId,
         'userId': userId,
       };
 }
