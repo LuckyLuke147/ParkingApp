@@ -30,8 +30,8 @@ class Reservation {
   Map<String, dynamic> toJson() => {
         'id': id,
         'placeId': placeId,
-        'fromDate': fromDate.toIso8601String(),
-        'toDate': toDate.toIso8601String(),
+        'dateTimeStart': fromDate.toIso8601String(),
+        'dateTimeEnd': toDate.toIso8601String(),
         'vehicleId': vehicleId,
         'userId': userId,
       };
