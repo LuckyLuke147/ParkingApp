@@ -101,7 +101,7 @@ class Users with ChangeNotifier {
   }
 
   Future<void> addReservation(int id, Reservation reservation) async {
-    final url = '$API_BASE_URL/users/$id/vehicle';
+    final url = '$API_BASE_URL/users/$id/reservation';
 
     try {
       final response = await http.post(url,

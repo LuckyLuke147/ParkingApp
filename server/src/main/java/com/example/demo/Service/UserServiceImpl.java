@@ -7,6 +7,9 @@ import com.example.demo.Repository.ReservationRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Repository.VehicleRepository;
 import com.example.demo.Service.Interface.UserService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     UserRepository userRepository;
@@ -91,12 +95,16 @@ public class UserServiceImpl implements UserService {
                 selectedSpace = space;
             }
         }
+        if(selectedSpace == null) {
+            throw new RuntimeException("Brak wolnych miejsc");
+        }
         reservation.setSpaceId(selectedSpace.getId());
         selectedSpace.setFree(false);
 
         reservation.setUser(user);
 
         reservationRepository.save(reservation);
+        logger.info("Reservation created.");
         return reservation;
     }
 
